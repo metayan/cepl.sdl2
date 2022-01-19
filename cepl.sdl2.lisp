@@ -163,7 +163,7 @@ Your machine must support at least GL 3.3")
 (defun make-sdl-surface (width height title fullscreen
                          no-frame alpha-size depth-size stencil-size
                          red-size green-size blue-size buffer-size
-                         double-buffer hidden resizable)
+                         double-buffer hidden always-on-top resizable)
   (declare (ignore alpha-size depth-size stencil-size buffer-size double-buffer
                    red-size green-size blue-size))
   (let ((surface
@@ -173,6 +173,7 @@ Your machine must support at least GL 3.3")
                                       ,(when fullscreen :fullscreen-desktop)
                                       ,(when resizable :resizable)
                                       ,(when no-frame :borderless)
+                                      ,(when always-on-top :always-on-top)
                                       ,(when hidden :hidden))))))
     #+(or windows darwin) ; hack to fix CEPL hangup under SLIME
     (progn
