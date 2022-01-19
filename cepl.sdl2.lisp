@@ -174,7 +174,7 @@ Your machine must support at least GL 3.3")
                                       ,(when resizable :resizable)
                                       ,(when no-frame :borderless)
                                       ,(when hidden :hidden))))))
-    #+windows ; hack to fix CEPL hangup on Windows under SLIME
+    #+(or windows darwin) ; hack to fix CEPL hangup under SLIME
     (progn
       (sdl2:hide-window surface)
       (sdl2:show-window surface))
