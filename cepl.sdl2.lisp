@@ -1,5 +1,7 @@
 (in-package :cepl.sdl2)
 
+(declaim (optimize (safety 3) (debug 3)))
+
 (defvar *initd* nil)
 
 ;;======================================================================
@@ -134,9 +136,20 @@ Your machine must support at least GL 3.3")
                           sdl2-ffi::+sdl-gl-context-profile-compatibility+))
     (sdl2:gl-set-attr :context-major-version major)
     (sdl2:gl-set-attr :context-minor-version minor)
+    (format t "~&create-context-by-version ~a ~a ~a~%" major minor *core-context*)
+    (finish-output)
     (sdl2:gl-create-context surface)))
 
 (defun search-for-context (surface)
+  (sdl2:gl-set-attr :context-profile-mask
+                    (if *core-context*
+                        sdl2-ffi::+sdl-gl-context-profile-core+
+                        sdl2-ffi::+sdl-gl-context-profile-compatibility+))
+  (format t "~&Creating core context")
+  (finish-output)
+  (sdl2:gl-create-context surface))
+
+(defun search-for-context-from-up-high (surface)
   (let ((p (if *core-context*
                sdl2-ffi::+sdl-gl-context-profile-core+
                sdl2-ffi::+sdl-gl-context-profile-compatibility+))
@@ -146,6 +159,8 @@ Your machine must support at least GL 3.3")
        :until context
        :do (handler-case
                (progn
+                 (format t "~&search-for-context ~a ~a ~a~%" major minor core)
+                 (finish-output)
                  ;; (print (list :> major minor (= core +)))
                  (sdl2:gl-set-attr :context-profile-mask core)
                  (sdl2:gl-set-attr :context-major-version major)
